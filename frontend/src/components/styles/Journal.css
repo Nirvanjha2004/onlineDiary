@@ -1,0 +1,7 @@
+.journalbg{
+    background-image: url('Journalsbg.jpg');
+    height: auto;
+    min-height: 100vh;
+    max-width: 100vw;
+    background-size: 100vw 
+}

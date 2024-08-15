@@ -1,0 +1,40 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://diarydb_owner:7dSRafCjK1nL@ep-empty-snow-a5y5dh35.us-east-2.aws.neon.tech/diarydb?sslmode=require"
+}
+
+enum savedThemes {
+  RED
+  GREEN
+  BLUE
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  username   String   @unique
+  email      String
+  password   String
+  firstName  String
+  lastName   String
+  diaries    Diary[]  // Relation field
+}
+
+model Diary {
+  id         Int     @id @default(autoincrement())
+  title      String
+  content    String
+  done       Boolean @default(false)
+  theme      savedThemes
+  userId     Int
+  user       User    @relation(fields: [userId], references: [id]) // Foreign key relationship
+}
