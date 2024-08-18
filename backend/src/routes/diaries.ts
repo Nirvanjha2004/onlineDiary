@@ -1,13 +1,20 @@
 import { PrismaClient } from '@prisma/client'
 import express, { query } from 'express'
 import cookieParser from 'cookie-parser';
+import jwt from 'jsonwebtoken'
 
 const prisma = new PrismaClient();
 export const diaryRouter = express.Router()
 diaryRouter.use(cookieParser());
 
-diaryRouter.use('/*', (req, res)=>{
+diaryRouter.use('/*', async (req, res, next)=>{
     //Logic for verifying the user
+    const authHeader = req.header('Authorization') || "";
+    const verifiyUser = jwt.verify(authHeader, "secretkey");
+    if(!verifiyUser){
+        console.log("User can not be verified");
+    }
+    next();
 })
 
 diaryRouter.get('/getall', async (req, res)=>{
