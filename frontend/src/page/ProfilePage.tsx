@@ -3,7 +3,7 @@ import Profile from '../components/Profile'
 
 function ProfilePage() {
   return (
-    <div className='journalbg'>
+    <div className='journalbg1'>
         <Navbar/>
         <div className='mt-20'>
             <Profile/>

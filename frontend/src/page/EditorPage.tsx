@@ -6,7 +6,7 @@ import SideBar from '../components/SideBar';
 
 function EditorPage() {
   return (
-    <div className="journalbg">
+    <div className="journalbg1">
       <SideBar/>
       <Navbar/>
       <div>

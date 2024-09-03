@@ -6,7 +6,7 @@ import '../components/styles/Journal.css'
 
 function Journals() {
   return (
-    <div className="journalbg">
+    <div className="journalbg1">
         <Navbar/>
         <BelowNav/>
         <DiaryBox/>

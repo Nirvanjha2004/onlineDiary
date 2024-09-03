@@ -15,9 +15,10 @@ export function Login() {
           console.log(result)
           const credential = GoogleAuthProvider.credentialFromResult(result);
           console.log(credential)
-          const token = credential.accessToken;
+          const token = credential?.accessToken;
           // The signed-in user info.
           const user = result.user;
+          console.log(user);
         }).catch((error) => {
           // Handle Errors here.
           const errorCode = error.code;
@@ -28,7 +29,7 @@ export function Login() {
           const credential = GoogleAuthProvider.credentialFromError(error);
           // ...
         }).then(()=>{
-            navigate('/');
+            navigate('/journals');
         });
     }
     

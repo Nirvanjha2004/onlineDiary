@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar"
 
 function EntriesPage() {
   return (
-    <div className="journalbg">
+    <div className="journalbg1">
         <Navbar/>
         <Entries/>
     </div>

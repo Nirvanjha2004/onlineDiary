@@ -1,3 +1,5 @@
+import BasicSelect from "./ThemeButton";
+
 function BelowNav() {
   return (
     <div>
@@ -6,11 +8,13 @@ function BelowNav() {
           <div className="flex items-center">
             <ul className="flex flex-row font-medium mt-0 space-x-8 rtl:space-x-reverse text-sm">
               <li className="bg-[#20c997] rounded-md p-2">
-                <button
+                {/* <button
+                onClick={changeTheme}
                   className="text-gray-900 dark:text-black hover:underline"
                 >
                   Change Themes
-                </button>
+                </button> */}
+                <BasicSelect/>
               </li>
               <li className="bg-[#ff851b] rounded-md p-2">
                 <button
