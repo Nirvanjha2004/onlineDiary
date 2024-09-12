@@ -20,7 +20,7 @@ import CodeBox from "@bomdi/codebox";
 import AudioPlayer from "editorjs-audio-player";
 import ImageGallery from "@kiberpro/editorjs-gallery";
 import SKMFlipBox from "skm-flipbox";
-import './styles/Editor.scss'
+import "./styles/Editor.scss";
 const DEFAULT_INITIAL_DATA = {
   time: new Date().getTime(),
   blocks: [
@@ -47,7 +47,14 @@ const EditorComponent = () => {
       data: DEFAULT_INITIAL_DATA,
       onChange: async () => {
         const content = await editor.save(); // save the content
-        console.log(content);
+        const timestamp = Number(content.time);
+        const date = new Date(timestamp);
+        const dateString = date.toISOString().split('T')[0];
+        const timeString = date.toISOString().split('T')[1].split('.')[0];
+        console.log(timeString);
+
+        console.log(dateString);
+        console.log(date.toString());
       },
       tools: {
         header: Header,
@@ -85,11 +92,7 @@ const EditorComponent = () => {
     };
   }, []);
 
-  return (
-      <div id="editorjs"></div>
-  );
+  return <div id="editorjs"></div>;
 };
 
 export default EditorComponent;
-
-

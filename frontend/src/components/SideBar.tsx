@@ -73,3 +73,8 @@ export default function TemporaryDrawer() {
     </div>
   );
 }
+
+
+
+//Here Set the fileRef in the Context using the useContext and setUser(), dont forget to pass the fileRef in the curly Braces like setUser({fileRef})\
+//And agar shuruaat se hi chhate ho ki teen lines ko click krne pe modal open ho... to useEffect use krna....jese hi page reload hoga apne aap ref set ho jayega ... but dependency daal dena.... setUser else it will render infinite times..

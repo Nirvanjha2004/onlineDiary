@@ -4,13 +4,17 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { updateThemeSuccess } from "../features/counter/themeSlice";
+import { useDispatch } from "react-redux";
 
 export default function BasicSelect() {
-  const [theme, setTheme] = React.useState("");
-  
+  const dispatch = useDispatch();
+  const [theme, setTheme] = React.useState("red");
 
   const handleChange = (event: SelectChangeEvent) => {
-    setTheme(event.target.value as string);
+    const newTheme = event.target.value as string;
+    setTheme(newTheme); // Update local state
+    dispatch(updateThemeSuccess(newTheme));
   };
 
   return (
@@ -39,15 +43,16 @@ export default function BasicSelect() {
           id="demo-simple-select"
           value={theme}
           label="Theme"
+          defaultValue="red"
           onChange={handleChange}
         >
-          <MenuItem sx={{ fontSize: "0.8rem" }} value={'red'}>
+          <MenuItem sx={{ fontSize: "0.8rem" }} value={"red"}>
             RED
           </MenuItem>
-          <MenuItem sx={{ fontSize: "0.8rem" }} value={'green'}>
+          <MenuItem sx={{ fontSize: "0.8rem" }} value={"green"}>
             GREEN
           </MenuItem>
-          <MenuItem sx={{ fontSize: "0.8rem" }} value={'blue'}>
+          <MenuItem sx={{ fontSize: "0.8rem" }} value={"blue"}>
             BLUE
           </MenuItem>
         </Select>

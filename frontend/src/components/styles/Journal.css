@@ -1,4 +1,4 @@
-.journalbg1{
+.journalbgred{
     background-image: url('Journalsbg.jpg');
     height: auto;
     min-height: 100vh;
@@ -6,15 +6,15 @@
     background-size: 100vw 
 }
 
-.journalbg2{
-    background-image: url('Journalsbg.jpg');
+.journalbggreen{
+    background-image: url('bg2.jpg');
     height: auto;
     min-height: 100vh;
     max-width: 100vw;
     background-size: 100vw 
 }
 
-.journalbg3{
+.journalbgblue{
     background-image: url('Journalsbg.jpg');
     height: auto;
     min-height: 100vh;

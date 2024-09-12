@@ -101,3 +101,6 @@ export default function Navbar() {
     </nav>
   );
 }
+
+
+//Yaha ref ko access kiya ha using useContext and user, user.fileRef.current.click()

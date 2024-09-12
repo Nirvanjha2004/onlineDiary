@@ -13,7 +13,7 @@ function Entries() {
           <div className="flex pb-7">
             <form className="max-w-sm mx-auto">
               <label className="block mt-1 text-sm font-medium text-gray-900">
-                Select an option
+                Select
               </label>
               <select
                 id="countries"
@@ -28,7 +28,7 @@ function Entries() {
             </form>
             <form className="max-w-sm mx-auto">
               <label className="block mt-1 text-sm font-medium text-gray-900">
-                Select an option
+                Since
               </label>
               <select
                 id="countries"
@@ -43,7 +43,7 @@ function Entries() {
             </form>
             <form className="max-w-sm mx-auto">
               <label className="block mt-1 text-sm font-medium text-gray-900">
-                Select an option
+                View
               </label>
               <select
                 id="countries"
