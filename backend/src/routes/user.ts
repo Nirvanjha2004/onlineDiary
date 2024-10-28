@@ -12,14 +12,12 @@ userRouter.use(cookieParser());
 
 userRouter.post("/signup", async (req, res) => {
   try {
-    const { username, password, email, firstName, lastName } = await req.body;
+    const { email, name, emailVerified } = await req.body;
     const createduser = await prisma.user.create({
       data: {
         email,
-        username,
-        password,
-        firstName,
-        lastName,
+        Name: name,
+        emailVerified: emailVerified,
       },
     });
 
@@ -39,8 +37,8 @@ The issue you're facing is because headers are not persisted between requests on
 userRouter.put("/update", async (req, res) => {
   //Take the userId find it in the prisma and update the details
   try {
-    const { username, email, password, firstName, lastName } = req.body;
-    console.log(username);
+    const { email, name } = req.body;
+    console.log(name);
     const id = Number(req.cookies.userId);
     console.log("id", id);
     const updatedUser = await prisma.user.update({
@@ -49,11 +47,8 @@ userRouter.put("/update", async (req, res) => {
       },
 
       data: {
-        username,
         email,
-        password,
-        firstName,
-        lastName,
+        Name: name,
       },
     });
 
@@ -65,22 +60,25 @@ userRouter.put("/update", async (req, res) => {
 });
 
 userRouter.post("/signin", async (req, res) => {
-  const { username, password } = await req.body;
-  const verifiedUser = await prisma.user.findUnique({
-    where: {
-      username,
-    },
-  });
-  if (!verifiedUser)
-    res.status(400).json({
-      message: "You need to Sign Up first!",
+  const { name, email, emailVerified } =  req.body;
+  try {
+    // Use Prisma to save or update the user in the database
+    const user = await prisma.user.upsert({
+      where: { email: email },    //The error occurs because your Prisma schema likely has id as the primary key, and Prisma expects an id to uniquely identify the user when using the upsert() method. To use email as the unique identifier in where, you'll need to ensure that email is marked as @unique in your Prisma schema.
+      update: { Name: name, emailVerified: emailVerified },
+      create: { Name: name, email: email, emailVerified: emailVerified },
     });
-  const token = jwt.sign(username, "privatekey");
+    res.status(200).json({ message: "User saved successfully", user });
+  } catch (error) {
+    console.error("Error saving user data:", error);
+    res.status(500).json({ error: "Error saving user data" });
+  }
+  // const token = jwt.sign(username, "privatekey");
 //   localStorage.setItem("AuthToken",token); Can not use it because localStorage is available on the client side and not on the server side
 //   we have to get the token on the client side and set it when sign in button is clicked
   return res.json({
     message : "Signed IN successfully!",
-    token
+    // token
   });
 });
 

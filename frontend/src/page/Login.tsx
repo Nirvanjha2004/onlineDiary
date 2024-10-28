@@ -1,6 +1,7 @@
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { app } from "../friebase";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const auth = getAuth(app);
 
@@ -18,6 +19,12 @@ export function Login() {
           const token = credential?.accessToken;
           // The signed-in user info.
           const user = result.user;
+
+          axios.post("http://localhost:3000/user/login", {
+            name: user.displayName,
+            email: user.email,
+            emailVerified: user.emailVerified
+          })
           console.log(user);
         }).catch((error) => {
           // Handle Errors here.

@@ -19,8 +19,14 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const prisma = new client_1.PrismaClient();
 exports.diaryRouter = express_1.default.Router();
 exports.diaryRouter.use((0, cookie_parser_1.default)());
-// diaryRouter.use('/*', (req, res)=>{
+// diaryRouter.use('/*', async (req, res, next)=>{
 //     //Logic for verifying the user
+//     const authHeader = req.header('Authorization') || "";
+//     const verifiyUser = jwt.verify(authHeader, "secretkey");
+//     if(!verifiyUser){
+//         console.log("User can not be verified");
+//     }
+//     next();
 // })
 exports.diaryRouter.get('/getall', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // get the id from the body and search for that in the database
@@ -34,7 +40,6 @@ exports.diaryRouter.get('/getall', (req, res) => __awaiter(void 0, void 0, void 
                 id
             }
         });
-        console.log(userFound);
         const userId = userFound === null || userFound === void 0 ? void 0 : userFound.id;
         const diaries = yield prisma.diary.findMany({
             where: {
@@ -42,7 +47,9 @@ exports.diaryRouter.get('/getall', (req, res) => __awaiter(void 0, void 0, void 
             },
             select: {
                 content: true,
-                title: true
+                title: true,
+                theme: true,
+                done: true
             }
         });
         console.log(diaries);
@@ -54,12 +61,37 @@ exports.diaryRouter.get('/getall', (req, res) => __awaiter(void 0, void 0, void 
     catch (error) {
         console.log(error);
     }
-    // diaries.push([content, title]);
 }));
-exports.diaryRouter.post('/createNew', (req, res) => {
+exports.diaryRouter.post('/entries/save', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // get the id from the body and search for that in the database)
+    // Add one new entry in the diary database
+    //const userId = Number(req.cookies.userId);
+    const { theme, content, title, done, userId } = req.body;
+    const updatedDiaries = yield prisma.diary.create({
+        data: {
+            content,
+            title,
+            theme,
+            done,
+            userId
+        }
+    });
+}));
+exports.diaryRouter.post('/createNew', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // get the id from the body and search for that in the database
     // Add one new entry in the diary database
-});
+    const userId = Number(req.cookies.userId);
+    const { theme, content, title, done } = req.body;
+    const updatedDiaries = yield prisma.diary.create({
+        data: {
+            content,
+            title,
+            theme,
+            done,
+            userId
+        }
+    });
+}));
 exports.diaryRouter.post('/new/:theme', (req, res) => {
     const theme = req.query; //Extract the theme from the query param
     //Logic

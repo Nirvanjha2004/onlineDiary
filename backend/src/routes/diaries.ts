@@ -54,6 +54,21 @@ diaryRouter.get('/getall', async (req, res)=>{
     }
 })
 
+diaryRouter.post('/entries/save', async (req, res)=>{
+    // get the id from the body and search for that in the database)
+    // Add one new entry in the diary database
+    //const userId = Number(req.cookies.userId);
+    const {theme, content, title, done, userId} = req.body; 
+    const updatedDiaries = await prisma.diary.create({
+        data:{
+            content, 
+            title,
+            theme, 
+            done,
+            userId
+        }
+    })
+})
 diaryRouter.post('/createNew', async (req, res)=>{
     // get the id from the body and search for that in the database
     // Add one new entry in the diary database

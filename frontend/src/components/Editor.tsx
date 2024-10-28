@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";
 import Quote from "@editorjs/quote";
@@ -21,6 +21,8 @@ import AudioPlayer from "editorjs-audio-player";
 import ImageGallery from "@kiberpro/editorjs-gallery";
 import SKMFlipBox from "skm-flipbox";
 import "./styles/Editor.scss";
+import { useDispatch } from "react-redux";
+import { saveSucces } from "../features/counter/entries";
 const DEFAULT_INITIAL_DATA = {
   time: new Date().getTime(),
   blocks: [
@@ -35,6 +37,8 @@ const DEFAULT_INITIAL_DATA = {
 };
 
 const EditorComponent = () => {
+  const dispatch = useDispatch();
+  // const [savedjournal, setSavedJournal] = useState("");
   const ejInstance = useRef();
 
   const initEditor = () => {
@@ -47,10 +51,15 @@ const EditorComponent = () => {
       data: DEFAULT_INITIAL_DATA,
       onChange: async () => {
         const content = await editor.save(); // save the content
+        console.log(content.blocks[0].data.text);
+        // setSavedJournal(content.blocks[0].data.text);
+
+        dispatch(saveSucces(content));
+        // setSavedJournal(content)
         const timestamp = Number(content.time);
         const date = new Date(timestamp);
-        const dateString = date.toISOString().split('T')[0];
-        const timeString = date.toISOString().split('T')[1].split('.')[0];
+        const dateString = date.toISOString().split("T")[0];
+        const timeString = date.toISOString().split("T")[1].split(".")[0];
         console.log(timeString);
 
         console.log(dateString);

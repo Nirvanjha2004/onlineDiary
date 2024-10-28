@@ -3,22 +3,51 @@ import { getAuth } from "firebase/auth";
 import { MdOutlineStorage } from "react-icons/md";
 import { app } from "../friebase";
 import ButtonContext from "../context/ButtonContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../app/store";
+import axios from "axios";
 
 const auth = getAuth(app);
 
 const SignedIn = auth.currentUser;
 export default function Navbar() {
+  const getTheme = useSelector((state: RootState) => state.theme);
+  const savedJournalSelector = useSelector((state: RootState) => state.entry);
+  const handleSaveNow = async () => {
+    
+    try {
+      console.log(savedJournalSelector.Entries?.blocks[0].data.text);
+      const response = await axios.post("http://localhost:3000/diary/entries/save", {
+        content : savedJournalSelector.Entries?.blocks[1].data.text,
+        title: savedJournalSelector.Entries?.blocks[0].data.text ,
+        theme: String(getTheme.currentTheme),
+        done: true,
+        userId: Number(12),
+      });
+      console.log(response);
+  
+    } catch (error) {
+      console.log(error.message);
+    }
+
+  };
   // const ref = useRef();
   const { user } = useContext(ButtonContext);
   return (
     <nav className="sticky top-0 z-10 block w-full max-w-screen-xl px-6 py-3 mx-auto text-white bg-white border shadow-md rounded-xl border-white/80 bg-opacity-80 backdrop-blur-2xl backdrop-saturate-200">
       <div className="flex items-center justify-between text-blue-gray-900">
+        <button
+          className="block p-1 font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900"
+          onClick={handleSaveNow}
+        >
+          Save Now
+        </button>
         <div
           className="flex gap-2 "
           onClick={() => {
             if (user?.fileRef?.current) {
-              console.log(user.fileRef.current)
+              console.log(user.fileRef.current);
               user.fileRef.current.click();
             } else {
               console.log("fileRef not available");
@@ -101,6 +130,5 @@ export default function Navbar() {
     </nav>
   );
 }
-
 
 //Yaha ref ko access kiya ha using useContext and user, user.fileRef.current.click()

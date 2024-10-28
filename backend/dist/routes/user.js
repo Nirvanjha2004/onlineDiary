@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userRouter = void 0;
 const client_1 = require("@prisma/client");
 const express_1 = __importDefault(require("express"));
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 // Doing authentication using AuthHeader
 exports.userRouter = express_1.default.Router();
@@ -23,14 +22,12 @@ const prisma = new client_1.PrismaClient();
 exports.userRouter.use((0, cookie_parser_1.default)());
 exports.userRouter.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { username, password, email, firstName, lastName } = yield req.body;
+        const { email, name, emailVerified } = yield req.body;
         const createduser = yield prisma.user.create({
             data: {
                 email,
-                username,
-                password,
-                firstName,
-                lastName,
+                Name: name,
+                emailVerified: emailVerified,
             },
         });
         if (!createduser)
@@ -48,8 +45,8 @@ The issue you're facing is because headers are not persisted between requests on
 exports.userRouter.put("/update", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //Take the userId find it in the prisma and update the details
     try {
-        const { username, email, password, firstName, lastName } = req.body;
-        console.log(username);
+        const { email, name } = req.body;
+        console.log(name);
         const id = Number(req.cookies.userId);
         console.log("id", id);
         const updatedUser = yield prisma.user.update({
@@ -57,11 +54,8 @@ exports.userRouter.put("/update", (req, res) => __awaiter(void 0, void 0, void 0
                 id,
             },
             data: {
-                username,
                 email,
-                password,
-                firstName,
-                lastName,
+                Name: name,
             },
         });
         console.log(updatedUser);
@@ -72,22 +66,26 @@ exports.userRouter.put("/update", (req, res) => __awaiter(void 0, void 0, void 0
     }
 }));
 exports.userRouter.post("/signin", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { username, password } = yield req.body;
-    const verifiedUser = yield prisma.user.findUnique({
-        where: {
-            username,
-        },
-    });
-    if (!verifiedUser)
-        res.status(400).json({
-            message: "You need to Sign Up first!",
+    const { name, email, emailVerified } = req.body;
+    try {
+        // Use Prisma to save or update the user in the database
+        const user = yield prisma.user.upsert({
+            where: { email: email }, //The error occurs because your Prisma schema likely has id as the primary key, and Prisma expects an id to uniquely identify the user when using the upsert() method. To use email as the unique identifier in where, you'll need to ensure that email is marked as @unique in your Prisma schema.
+            update: { Name: name, emailVerified: emailVerified },
+            create: { Name: name, email: email, emailVerified: emailVerified },
         });
-    const token = jsonwebtoken_1.default.sign(username, "privatekey");
+        res.status(200).json({ message: "User saved successfully", user });
+    }
+    catch (error) {
+        console.error("Error saving user data:", error);
+        res.status(500).json({ error: "Error saving user data" });
+    }
+    // const token = jwt.sign(username, "privatekey");
     //   localStorage.setItem("AuthToken",token); Can not use it because localStorage is available on the client side and not on the server side
     //   we have to get the token on the client side and set it when sign in button is clicked
     return res.json({
         message: "Signed IN successfully!",
-        token
+        // token
     });
 }));
 exports.userRouter.post('/signout', (req, res) => {

@@ -21,11 +21,9 @@ enum savedThemes {
 
 model User {
   id         Int      @id @default(autoincrement())
-  username   String   @unique
-  email      String
-  password   String
-  firstName  String
-  lastName   String
+  email      String   @unique
+  emailVerified   Boolean
+  Name       String
   diaries    Diary[]  // Relation field
 }
 
